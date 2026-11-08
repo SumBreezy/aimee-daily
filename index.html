@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aimee's Daily">
+<meta name="theme-color" content="#fbeaf0">
+<title>Aimee's Daily</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💗</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23fbeaf0'/><text x='50' y='68' font-size='60' text-anchor='middle'>💗</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fraunces:ital,opsz,wght@1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7fa; --card:#ffffff; --soft:#fbeaf0; --soft2:#f4c0d1;
+  --pink:#d4537e; --deep:#993556; --ink:#3a2530; --muted:#8a6b78;
+  --line:rgba(153,53,86,.14); --ok:#3b8f5a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1d1418; --card:#2a1d23; --soft:#3d2430; --soft2:#5a2f42;
+    --pink:#ed93b1; --deep:#f4c0d1; --ink:#fbeaf0; --muted:#c9a5b4;
+    --line:rgba(244,192,209,.16); --ok:#7fd19b;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-size:16px;line-height:1.5}
+body{padding:max(16px,env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom))}
+.wrap{max-width:520px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+.view{display:none;animation:fade .25s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.date{margin:0;font-size:13px;color:var(--muted)}
+.hello{margin:0;font-size:24px;font-weight:800}
+.badge{width:44px;height:44px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:22px}
+.quote{background:var(--soft);border-radius:18px;padding:18px;margin-bottom:18px}
+.quote small{color:var(--deep);font-size:13px;font-weight:600}
+.quote p{margin:8px 0 12px;font-family:Fraunces,Georgia,serif;font-style:italic;font-size:19px;line-height:1.45;color:var(--deep)}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:600}
+.sec{font-size:13px;color:var(--muted);font-weight:600;margin:18px 2px 10px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:108px;position:relative;transition:transform .12s}
+.tile:active{transform:scale(.97)}
+.tile .em{font-size:28px;line-height:1}
+.tile b{font-size:16px;margin-top:6px}
+.tile span{font-size:13px;color:var(--muted)}
+.dot{position:absolute;top:12px;right:12px;width:10px;height:10px;border-radius:50%;background:var(--pink)}
+.back{display:inline-flex;align-items:center;gap:6px;border:none;background:none;padding:6px 0;font-weight:700;color:var(--pink);margin-bottom:8px}
+h2{font-size:24px;font-weight:800;margin:0 0 4px}
+.sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+.media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.m{aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--soft);position:relative}
+.m img,.m video{width:100%;height:100%;object-fit:cover;display:block}
+.m.big{grid-column:span 2;aspect-ratio:4/3}
+.m .tag{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 8px;border-radius:99px}
+.credit{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.3}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
+.fact{background:var(--soft);border-radius:14px;padding:14px;margin:0 0 14px;color:var(--deep)}
+.letter{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:18px;line-height:1.6;white-space:pre-line}
+.big-num{font-size:34px;font-weight:800;margin:2px 0}
+.row{display:flex;gap:10px;align-items:center}
+.btn{width:100%;border:none;background:var(--pink);color:#fff;border-radius:14px;padding:14px;font-weight:800;font-size:16px}
+.btn.ghost{background:var(--soft);color:var(--deep)}
+.btn:disabled{opacity:.6}
+input[type=datetime-local],input[type=date],input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;width:100%}
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.list-item:first-child{border-top:none}
+.x{border:none;background:none;color:var(--muted);font-size:18px;padding:4px 8px}
+.check{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line);font-size:17px}
+.check:first-child{border-top:none}
+.check input{width:24px;height:24px;accent-color:var(--pink)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.day{aspect-ratio:1;border-radius:8px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+.day.yes{background:var(--pink);color:#fff}
+.env{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:10px;display:flex;gap:12px;align-items:center}
+.env .em{font-size:24px}
+.env b{display:block}
+.env span{font-size:13px;color:var(--muted)}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:9;padding:16px}
+.lb.on{display:flex}
+.lb img,.lb video{max-width:100%;max-height:90vh;border-radius:12px}
+.done{color:var(--ok);font-weight:700}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin-top:28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section class="view on" id="home">
+  <div class="top">
+    <div><p class="date" id="today"></p><p class="hello" id="hello">Hi Aimee</p></div>
+    <div class="badge">💗</div>
+  </div>
+  <div class="quote">
+    <small>🩺 Nurse quote of the day</small>
+    <p id="quote"></p>
+    <button class="pill" id="moreQuote">Another one</button>
+  </div>
+  <div class="sec">Daily cuteness</div>
+  <div class="grid">
+    <button class="tile" data-go="dogs"><div class="em">🐶</div><b>Daily dogs</b><span>New pups every day</span></button>
+    <button class="tile" data-go="cats"><div class="em">🐱</div><b>Daily cats</b><span>New kitties every day</span></button>
+    <button class="tile" data-go="wild"><div class="em">🦦</div><b>Random animals</b><span id="wildSub">Animal of the day</span></button>
+    <button class="tile" data-go="note"><div class="em">💌</div><b>Note from me</b><span id="noteSub">New note today</span><i class="dot" id="noteDot"></i></button>
+  </div>
+  <div class="sec">Just for you</div>
+  <div class="grid">
+    <button class="tile" data-go="shift"><div class="em">⏰</div><b>Shift countdown</b><span id="shiftSub">Add your shifts</span></button>
+    <button class="tile" data-go="np"><div class="em">📚</div><b>NP school</b><span id="npSub">Study streak</span></button>
+    <button class="tile" data-go="open"><div class="em">✉️</div><b>Open when…</b><span>For the hard days</span></button>
+    <button class="tile" data-go="care"><div class="em">🫶</div><b>Self-care check</b><span id="careSub">0 of 5 today</span></button>
+  </div>
+  <p class="foot">Made with love by Theran</p>
+</section>
+
+<!-- DOGS -->
+<section class="view" id="dogs">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Daily dogs 🐶</h2><p class="sub">Fresh pups every day. Tap any to see it big.</p>
+  <div class="media" id="dogsGrid"><div class="loading">Fetching good boys…</div></div>
+</section>
+
+<!-- CATS -->
+<section class="view" id="cats">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Daily cats 🐱</h2><p class="sub">Fresh kitties every day. Tap any to see it big.</p>
+  <div class="media" id="catsGrid"><div class="loading">Herding cats…</div></div>
+</section>
+
+<!-- RANDOM ANIMALS -->
+<section class="view" id="wild">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2 id="wildTitle">Animal of the day</h2><p class="sub">A new animal every day.</p>
+  <div class="fact" id="wildFact"></div>
+  <div class="media" id="wildGrid"><div class="loading">Finding cuties…</div></div>
+</section>
+
+<!-- NOTE -->
+<section class="view" id="note">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Today's note 💌</h2><p class="sub">From Theran</p>
+  <div class="card"><div class="letter" id="noteText"></div></div>
+</section>
+
+<!-- SHIFTS -->
+<section class="view" id="shift">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Shift countdown ⏰</h2><p class="sub">Add your hospital shifts and I'll count down.</p>
+  <div class="card" id="shiftNow"></div>
+  <div class="card">
+    <b>Add a shift</b>
+    <div style="margin-top:10px"><input type="datetime-local" id="shiftStart"></div>
+    <div class="row" style="margin-top:10px"><input type="number" id="shiftHours" value="12" min="1" max="24" step="1" style="width:90px"><span style="color:var(--muted)">hours long</span></div>
+    <button class="btn" style="margin-top:12px" id="addShift">Add shift</button>
+    <p id="shiftErr" style="color:var(--pink);font-size:13px;margin:8px 0 0"></p>
+  </div>
+  <div class="card"><b>Upcoming</b><div id="shiftList" style="margin-top:6px"></div></div>
+</section>
+
+<!-- NP SCHOOL -->
+<section class="view" id="np">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>NP school 📚</h2><p class="sub">Future nurse practitioner loading…</p>
+  <div class="grid" style="margin-bottom:12px">
+    <div class="card" style="margin:0"><span style="font-size:13px;color:var(--muted)">Study streak</span><div class="big-num" id="streak">0</div><span style="font-size:13px;color:var(--muted)">days in a row</span></div>
+    <div class="card" style="margin:0"><span style="font-size:13px;color:var(--muted)">Until graduation</span><div class="big-num" id="gradDays">–</div><span style="font-size:13px;color:var(--muted)" id="gradLabel">set a date below</span></div>
+  </div>
+  <button class="btn" id="studied">I studied today ✏️</button>
+  <p id="studyMsg" style="text-align:center;margin:10px 0 0;color:var(--deep)"></p>
+  <div class="card" style="margin-top:12px"><b>Last 2 weeks</b><div class="days" id="days"></div></div>
+  <div class="card"><b>Graduation date</b><div style="margin-top:10px"><input type="date" id="gradDate"></div></div>
+</section>
+
+<!-- OPEN WHEN -->
+<section class="view" id="open">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Open when… ✉️</h2><p class="sub">Little letters for whenever you need one.</p>
+  <div id="envList"></div>
+  <div class="card" id="envOpen" style="display:none"><b id="envTitle"></b><div class="letter" id="envBody" style="margin-top:10px"></div><button class="btn ghost" style="margin-top:14px" id="envClose">Fold it back up</button></div>
+</section>
+
+<!-- SELF CARE -->
+<section class="view" id="care">
+  <button class="back" data-go="home">‹ Home</button>
+  <h2>Self-care check 🫶</h2><p class="sub">You take care of everyone else. Today, did you…</p>
+  <div class="card" id="careList"></div>
+  <p id="careMsg" style="text-align:center;color:var(--deep);font-weight:700"></p>
+</section>
+
+</div>
+<div class="lb" id="lb"></div>
+
+<script>
+/* =====================================================================
+   ✏️  THERAN — EDIT THIS SECTION
+   Everything you'd want to personalize is right here.
+   Keep the quotes "like this" and the commas between items.
+   ===================================================================== */
+
+const HER_NAME = "Aimee";
+
+// One note shows per day, then it loops back to the start.
+// Add as many as you want — the more you add, the longer before repeats.
+const NOTES = [
+  "Good morning, Aimee. Just a reminder that you're doing an amazing job juggling work, shifts, and school. I'm proud of you.",
+  "You make everything better just by being in it. Have a good day, beautiful.",
+  "Drink some water, eat something real, and remember someone thinks you're the best thing ever.",
+  "Future NP, current favorite person.",
+  "Whatever today throws at you, you've handled harder. Love you.",
+  "I hope at least one patient today realizes how lucky they are to have you.",
+  "Can't wait to see you tonight.",
+];
+
+// "Open when…" letters. title = what's on the envelope, body = the letter.
+const LETTERS = [
+  { emoji:"🌧️", title:"you had a rough shift", body:"Hey. Rough shifts don't mean you're not good at this — they mean you care. Take a breath, take a shower, and let me take care of you tonight." },
+  { emoji:"🌙", title:"you can't sleep", body:"Close your eyes and think about our future house, a lazy Sunday, and zero alarms. I'm right here." },
+  { emoji:"📖", title:"you're stressed about school", body:"You've gotten through every exam so far, and you'll get through this one. One chapter at a time. I believe in you more than you know." },
+  { emoji:"💭", title:"you miss me", body:"I miss you too. Text me right now — I'm probably already thinking about you." },
+  { emoji:"✨", title:"you need a reminder of how awesome you are", body:"Smart. Kind. Funny. Beautiful. Tougher than you give yourself credit for. That's you." },
+  { emoji:"🍕", title:"you're hangry", body:"Step one: put the phone down. Step two: go eat. Step three: text me what you want for dinner and I'll handle it." },
+];
+
+// Daily self-care checklist (resets every day).
+const CARE_ITEMS = ["Drink water 💧","Eat an actual meal 🥗","Take a real break ☕","Get some fresh air 🌤️","Do one thing just for you 💅"];
+
+// Leave blank and Aimee can set it herself in the app. Or put a date like "2028-05-15".
+const GRAD_DATE = "";
+
+/* =====================================================================
+   You don't need to edit anything below this line.
+   ===================================================================== */
+
+const QUOTES = [
+  "You don't just take vitals. You make people feel safe on their worst day.",
+  "Coffee in one hand, compassion in the other. Go get 'em.",
+  "Some heroes wear capes. Yours are scrubs and comfy shoes.",
+  "Twelve hours, a hundred tasks, and you still remembered to smile.",
+  "Future NP loading… please keep studying.",
+  "Chart it, own it, crush it.",
+  "Patients may forget the meds you passed, but they'll remember how kind you were.",
+  "You can start an IV on a dehydrated grandpa. You can handle today.",
+  "Nurse life: running on caffeine, kindness, and zero bathroom breaks.",
+  "Every patient you care for is someone's whole world.",
+  "Behind every good doctor is a nurse quietly fixing everything.",
+  "You were made for the hard days. That's why they gave them to you.",
+  "Scrubs on. Hair up. Let's save some lives.",
+  "If it wasn't charted, it didn't happen. Except how amazing you are — that's just known.",
+  "The world needs more people like you, and fewer people who call the nurse for the TV remote.",
+  "Tiny reminder: you're allowed to eat lunch too.",
+  "Clinical judgment, a big heart, and comfortable shoes. You've got all three.",
+  "You turn scary moments into calm ones. That's a superpower.",
+  "One shift at a time, one class at a time. You're getting there.",
+  "Nursing is a work of heart.",
+  "Hydrate like you tell your patients to.",
+  "Smart enough for the science, kind enough for the people.",
+  "You're the person someone will remember as 'the nice nurse.' Always.",
+  "Today's goal: everyone leaves better than they came in. Including you.",
+  "You've survived 100% of your hardest shifts so far.",
+  "Brain full of drug cards, heart full of patience.",
+  "Strong coffee, stronger nurse.",
+  "Somewhere a patient is feeling better because of you.",
+  "Studying now so future patients get the best NP ever.",
+  "You don't have to be perfect. You just have to show up and care. You always do.",
+  "Gloves on, game face on.",
+  "Your calm is contagious. Spread it around today.",
+  "Night shift, day shift, any shift — you make it look good.",
+  "Proud of you for doing the hard thing again today.",
+  "Be gentle with yourself. You're gentle with everyone else.",
+  "Code: awesome. Status: stable. Prognosis: excellent.",
+  "You're not just a nurse. You're the reason someone's family slept tonight.",
+  "Assess. Plan. Implement. Evaluate. Repeat. Slay.",
+  "Every pre-NP study session is a gift to your future patients.",
+  "Leave work at work, and go be cozy tonight.",
+];
+
+const ANIMALS = [
+  { name:"Sea otters", emoji:"🦦", taxon:"Enhydra lutris", fact:"Sea otters sometimes hold paws while they float and sleep so they don't drift apart." },
+  { name:"Red pandas", emoji:"🐼", taxon:"Ailurus fulgens", fact:"Red pandas wrap their big fluffy tails around themselves like a blanket when it's cold." },
+  { name:"Quokkas", emoji:"😊", taxon:"Setonix brachyurus", fact:"Quokkas are called the happiest animal on Earth because their faces look like they're always smiling." },
+  { name:"Capybaras", emoji:"🫶", taxon:"Hydrochoerus hydrochaeris", fact:"Capybaras are the world's biggest rodent, and other animals love to sit on them like a couch." },
+  { name:"Fennec foxes", emoji:"🦊", taxon:"Vulpes zerda", fact:"Fennec foxes have giant ears that help them hear bugs underground and stay cool in the desert." },
+  { name:"Hedgehogs", emoji:"🦔", taxon:"Erinaceus europaeus", fact:"A hedgehog has around 5,000 to 7,000 spines and curls into a little ball when it's nervous." },
+  { name:"Koalas", emoji:"🐨", taxon:"Phascolarctos cinereus", fact:"Koalas can sleep up to 18 to 22 hours a day. Goals." },
+  { name:"Emperor penguins", emoji:"🐧", taxon:"Aptenodytes forsteri", fact:"Emperor penguin dads balance the egg on their feet and keep it warm for about two months." },
+  { name:"Harp seals", emoji:"🦭", taxon:"Pagophilus groenlandicus", fact:"Harp seal pups are born with fluffy white coats that help them blend into the ice." },
+  { name:"Sloths", emoji:"🦥", taxon:"Bradypus variegatus", fact:"Sloths move so slowly that algae can grow on their fur, which helps them hide in the trees." },
+  { name:"Pikas", emoji:"🐭", taxon:"Ochotona princeps", fact:"Pikas gather little piles of flowers and grass all summer so they have snacks all winter." },
+  { name:"Axolotls", emoji:"🦎", taxon:"Ambystoma mexicanum", fact:"Axolotls can regrow lost legs and even parts of their heart." },
+  { name:"Ducks", emoji:"🦆", taxon:"Anas platyrhynchos", fact:"Ducklings bond with the first moving thing they see after hatching and follow it everywhere." },
+  { name:"Raccoons", emoji:"🦝", taxon:"Procyon lotor", fact:"Raccoons have super sensitive front paws and often dunk their food in water to feel it better." },
+  { name:"Red foxes", emoji:"🦊", taxon:"Vulpes vulpes", fact:"Red foxes curl their fluffy tails over their noses like a scarf to stay warm." },
+  { name:"Snowy owls", emoji:"🦉", taxon:"Bubo scandiacus", fact:"Snowy owls have feathers all the way down their feet, like built-in slippers." },
+  { name:"Bunnies", emoji:"🐰", taxon:"Oryctolagus cuniculus", fact:"Happy rabbits do a jump-and-twist in the air called a binky." },
+  { name:"Chipmunks", emoji:"🐿️", taxon:"Tamias striatus", fact:"Chipmunk cheek pouches can stretch to about three times the size of their head." },
+  { name:"Giant pandas", emoji:"🐼", taxon:"Ailuropoda melanoleuca", fact:"Giant pandas spend around half of every day eating bamboo." },
+  { name:"Puffins", emoji:"🐦", taxon:"Fratercula arctica", fact:"Puffins can carry 10 or more little fish in their beaks at once." },
+  { name:"Hummingbirds", emoji:"🐦", taxon:"Archilochus colubris", fact:"A hummingbird's heart can beat over 1,000 times a minute." },
+  { name:"Wombats", emoji:"🐻", taxon:"Vombatus ursinus", fact:"Wombats are the only animals known to make cube-shaped poop. Yes, really." },
+  { name:"Meerkats", emoji:"👀", taxon:"Suricata suricatta", fact:"Meerkats take turns standing guard so the rest of the family can eat safely." },
+  { name:"Sea turtles", emoji:"🐢", taxon:"Chelonia mydas", fact:"Green sea turtles get their name from the greenish fat under their shells, thanks to their seagrass diet." },
+  { name:"Arctic foxes", emoji:"🦊", taxon:"Vulpes lagopus", fact:"Arctic foxes change coats with the seasons: snowy white in winter, brownish in summer." },
+  { name:"Hippos", emoji:"🦛", taxon:"Hippopotamus amphibius", fact:"Hippos make their own reddish sunscreen right from their skin." },
+  { name:"Elephants", emoji:"🐘", taxon:"Loxodonta africana", fact:"Elephants comfort each other by gently touching with their trunks." },
+  { name:"Squirrels", emoji:"🐿️", taxon:"Sciurus carolinensis", fact:"Squirrels forget where they bury lots of their nuts, which means they plant tons of trees." },
+  { name:"Burrowing owls", emoji:"🦉", taxon:"Athene cunicularia", fact:"Burrowing owls live in underground tunnels instead of trees." },
+  { name:"Harbor seals", emoji:"🦭", taxon:"Phoca vitulina", fact:"Every harbor seal has its own unique spot pattern, like a fingerprint." },
+  { name:"Opossums", emoji:"🐀", taxon:"Didelphis virginiana", fact:"Opossums eat thousands of ticks a season and almost never get rabies." },
+];
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const now = new Date();
+const TODAY = keyOf(now);
+const DAYNUM = Math.floor(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 86400000);
+const store = {
+  get(k, fb){ try{ const v = localStorage.getItem("aimee:"+k); return v==null ? fb : JSON.parse(v); }catch(e){ return fb; } },
+  set(k, v){ try{ localStorage.setItem("aimee:"+k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem("aimee:"+k); }catch(e){} },
+};
+function seeded(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffle(arr, seed){ const a = arr.slice(), r = seeded(seed); for(let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+const pickDaily = (arr, salt) => shuffle(arr, 1234 + salt)[DAYNUM % arr.length];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function getJSON(url){ const r = await fetch(url); if(!r.ok) throw new Error(r.status); return r.json(); }
+
+/* clean out old cached days */
+try{ Object.keys(localStorage).forEach(k => { if(/^aimee:media:/.test(k) && !k.endsWith(TODAY)) localStorage.removeItem(k); }); }catch(e){}
+
+/* ---------- navigation ---------- */
+const loaders = {};
+function go(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === id));
+  window.scrollTo(0,0);
+  if(id !== "home") history.replaceState(null, "", "#"+id); else history.replaceState(null, "", location.pathname);
+  if(loaders[id]) loaders[id]();
+  if(id === "home") refreshHome();
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if(b) go(b.dataset.go); });
+
+/* ---------- home ---------- */
+function refreshHome(){
+  const h = new Date().getHours();
+  const greet = h < 5 ? "Hi night owl" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : h < 22 ? "Good evening" : "Hi night owl";
+  $("hello").textContent = `${greet}, ${HER_NAME}`;
+  $("today").textContent = new Date().toLocaleDateString(undefined, { weekday:"long", month:"long", day:"numeric" });
+  $("noteDot").style.display = store.get("noteRead") === TODAY ? "none" : "block";
+  $("noteSub").textContent = store.get("noteRead") === TODAY ? "Read today 💗" : "New note today";
+  const a = pickDaily(ANIMALS, 7);
+  $("wildSub").textContent = `Today: ${a.name.toLowerCase()}`;
+  const careDone = store.get("care:"+TODAY, []).length;
+  $("careSub").textContent = careDone >= CARE_ITEMS.length ? "All done today ✨" : `${careDone} of ${CARE_ITEMS.length} today`;
+  $("npSub").textContent = `${calcStreak()} day streak`;
+  $("shiftSub").textContent = shiftSummary();
+}
+let qi = DAYNUM % QUOTES.length;
+const qOrder = shuffle(QUOTES, 99);
+$("quote").textContent = qOrder[qi];
+$("moreQuote").onclick = () => { qi = (qi + 1) % qOrder.length; $("quote").textContent = qOrder[qi]; };
+
+/* ---------- media grid + lightbox ---------- */
+function renderMedia(el, items){
+  if(!items.length){ el.innerHTML = `<div class="loading">Couldn't load today's cuties. Check your connection and try again.</div>`; return; }
+  el.innerHTML = items.map((it, i) => {
+    const big = i === 0 ? " big" : "";
+    const inner = it.type === "video"
+      ? `<video src="${esc(it.url)}" muted loop playsinline autoplay preload="metadata"></video><span class="tag">▶ clip</span>`
+      : `<img src="${esc(it.url)}" loading="lazy" alt="">${it.type==="gif" ? '<span class="tag">gif</span>' : ""}`;
+    return `<div><div class="m${big}" data-i="${i}">${inner}</div>${it.credit ? `<div class="credit">${esc(it.credit)}</div>` : ""}</div>`;
+  }).join("");
+  el.querySelectorAll(".m img").forEach(img => img.onerror = () => img.closest("div").parentElement.remove());
+  el.querySelectorAll(".m").forEach(m => m.onclick = () => openLB(items[+m.dataset.i]));
+}
+// first tile spans full width — move its wrapper too
+const style = document.createElement("style");
+style.textContent = ".media > div:first-child{grid-column:span 2}";
+document.head.appendChild(style);
+
+function openLB(it){
+  const lb = $("lb");
+  lb.innerHTML = it.type === "video" ? `<video src="${esc(it.url)}" controls autoplay loop playsinline></video>` : `<img src="${esc(it.url)}" alt="">`;
+  lb.classList.add("on");
+}
+$("lb").onclick = () => { $("lb").classList.remove("on"); $("lb").innerHTML = ""; };
+
+async function dailyMedia(name, fetcher, el){
+  const cacheKey = `media:${name}:${TODAY}`;
+  let items = store.get(cacheKey);
+  if(!items){
+    try{ items = await fetcher(); }catch(e){ items = []; }
+    if(items.length) store.set(cacheKey, items);
+  }
+  renderMedia(el, items);
+}
+const typeOf = url => /\.(mp4|webm)$/i.test(url) ? "video" : /\.gif$/i.test(url) ? "gif" : "img";
+
+/* ---------- dogs ---------- */
+async function fetchDogs(){
+  const out = [], seen = new Set();
+  const tries = await Promise.allSettled(Array.from({length:12}, () => getJSON("https://random.dog/woof.json")));
+  const vids = [], pics = [];
+  tries.forEach(t => {
+    if(t.status !== "fulfilled" || !t.value.url || seen.has(t.value.url)) return;
+    seen.add(t.value.url);
+    const ty = typeOf(t.value.url);
+    if(ty === "video" && (t.value.fileSizeBytes || 0) < 15e6) vids.push({url:t.value.url, type:"video"});
+    else if(ty !== "video") pics.push({url:t.value.url, type:ty});
+  });
+  out.push(...vids.slice(0,2));
+  try{
+    const d = await getJSON("https://dog.ceo/api/breeds/image/random/6");
+    d.message.forEach(u => pics.push({url:u, type:"img"}));
+  }catch(e){}
+  out.push(...pics);
+  return out.slice(0,7);
+}
+loaders.dogs = () => dailyMedia("dogs", fetchDogs, $("dogsGrid"));
+
+/* ---------- cats ---------- */
+async function fetchCats(){
+  const out = [];
+  const [pics, gifs] = await Promise.allSettled([
+    getJSON("https://api.thecatapi.com/v1/images/search?limit=10&mime_types=jpg,png"),
+    getJSON("https://api.thecatapi.com/v1/images/search?limit=10&mime_types=gif"),
+  ]);
+  if(gifs.status === "fulfilled") gifs.value.slice(0,2).forEach(c => out.push({url:c.url, type:"gif"}));
+  if(pics.status === "fulfilled") pics.value.slice(0,5).forEach(c => out.push({url:c.url, type:"img"}));
+  return out;
+}
+loaders.cats = () => dailyMedia("cats", fetchCats, $("catsGrid"));
+
+/* ---------- random animal ---------- */
+async function fetchWild(){
+  const a = pickDaily(ANIMALS, 7);
+  const url = `https://api.inaturalist.org/v1/observations?taxon_name=${encodeURIComponent(a.taxon)}&photos=true&photo_licensed=true&quality_grade=research&order_by=votes&per_page=40`;
+  const d = await getJSON(url);
+  const obs = shuffle(d.results.filter(o => o.photos && o.photos.length), DAYNUM).slice(0,7);
+  return obs.map(o => ({
+    url: o.photos[0].url.replace("/square.", "/medium."),
+    type: "img",
+    credit: (o.photos[0].attribution || "").replace(/\s*\(c\)\s*/i, "© ").replace(/, some rights reserved.*$/i, "") + " · iNaturalist",
+  }));
+}
+loaders.wild = () => {
+  const a = pickDaily(ANIMALS, 7);
+  $("wildTitle").textContent = `${a.name} ${a.emoji}`;
+  $("wildFact").innerHTML = `<b>Fun fact:</b> ${esc(a.fact)}`;
+  dailyMedia("wild", fetchWild, $("wildGrid"));
+};
+
+/* ---------- note ---------- */
+loaders.note = () => {
+  $("noteText").textContent = NOTES.length ? NOTES[DAYNUM % NOTES.length] : "Love you. ♥";
+  store.set("noteRead", TODAY);
+};
+
+/* ---------- shifts ---------- */
+const getShifts = () => store.get("shifts", []).sort((a,b) => a.start - b.start);
+function fmtDur(ms){
+  const m = Math.max(0, Math.round(ms/60000)), d = Math.floor(m/1440), h = Math.floor(m%1440/60), mm = m%60;
+  return d ? `${d}d ${h}h` : h ? `${h}h ${mm}m` : `${mm}m`;
+}
+function shiftState(){
+  const t = Date.now(), list = getShifts();
+  const cur = list.find(s => t >= s.start && t < s.start + s.hours*3600000);
+  if(cur) return { kind:"on", s:cur };
+  const justDone = list.filter(s => t >= s.start + s.hours*3600000 && t < s.start + s.hours*3600000 + 12*3600000).pop();
+  const next = list.find(s => s.start > t);
+  return { kind: justDone ? "done" : next ? "next" : "none", s: justDone || next, next };
+}
+function shiftSummary(){
+  const st = shiftState();
+  if(st.kind === "on") return "On shift now 💪";
+  if(st.kind === "done") return "You survived! 🎉";
+  if(st.kind === "next") return `Next in ${fmtDur(st.s.start - Date.now())}`;
+  return "Add your shifts";
+}
+function renderShifts(){
+  const st = shiftState(), t = Date.now();
+  let html;
+  if(st.kind === "on"){
+    const left = st.s.start + st.s.hours*3600000 - t;
+    html = `<span style="color:var(--muted);font-size:13px">On shift right now</span><div class="big-num">${fmtDur(left)} left</div><p style="margin:0;color:var(--deep)">You've got this. Don't forget to eat something. 💗</p>`;
+  } else if(st.kind === "done"){
+    html = `<div class="big-num">You survived 🎉</div><p style="margin:0;color:var(--deep)">Shift's over. Shoes off, snacks out, go nap.</p>` +
+      (st.next ? `<p style="margin:10px 0 0;font-size:13px;color:var(--muted)">Next shift in ${fmtDur(st.next.start - t)}</p>` : "");
+  } else if(st.kind === "next"){
+    html = `<span style="color:var(--muted);font-size:13px">Next shift</span><div class="big-num">${fmtDur(st.s.start - t)}</div><p style="margin:0;color:var(--muted)">${new Date(st.s.start).toLocaleString(undefined,{weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</p>`;
+  } else {
+    html = `<div class="big-num">No shifts 🛋️</div><p style="margin:0;color:var(--muted)">Add one below when you get scheduled.</p>`;
+  }
+  $("shiftNow").innerHTML = html;
+  const upcoming = getShifts().filter(s => s.start + s.hours*3600000 > t);
+  $("shiftList").innerHTML = upcoming.length ? upcoming.map(s =>
+    `<div class="list-item"><div><b>${new Date(s.start).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})}</b><br><span style="font-size:13px;color:var(--muted)">${new Date(s.start).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})} · ${s.hours} hrs</span></div><button class="x" aria-label="Remove shift" data-del="${s.start}">✕</button></div>`
+  ).join("") : `<p style="color:var(--muted);margin:6px 0 0">Nothing scheduled yet.</p>`;
+  $("shiftList").querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    store.set("shifts", getShifts().filter(s => s.start !== +b.dataset.del)); renderShifts();
+  });
+}
+$("addShift").onclick = () => {
+  const v = $("shiftStart").value, hrs = Math.round(+$("shiftHours").value);
+  if(!v){ $("shiftErr").textContent = "Pick a start date and time first."; return; }
+  if(!(hrs >= 1 && hrs <= 24)){ $("shiftErr").textContent = "Shift length should be 1 to 24 hours."; return; }
+  $("shiftErr").textContent = "";
+  const list = getShifts(); list.push({ start: new Date(v).getTime(), hours: hrs });
+  store.set("shifts", list); $("shiftStart").value = ""; renderShifts();
+};
+$("shiftStart").oninput = () => $("shiftErr").textContent = "";
+let shiftTimer;
+loaders.shift = () => { renderShifts(); clearInterval(shiftTimer); shiftTimer = setInterval(() => { if($("shift").classList.contains("on")) renderShifts(); }, 30000); };
+
+/* ---------- NP school ---------- */
+function calcStreak(){
+  const days = new Set(store.get("study", []));
+  let n = 0; const d = new Date();
+  if(!days.has(keyOf(d))) d.setDate(d.getDate()-1);
+  while(days.has(keyOf(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+const CHEERS = ["Look at you go! 📚","Future NP energy ✨","Your brain is getting so big 🧠","Proud of you! 💗","One step closer 🎓"];
+function renderNP(){
+  const days = new Set(store.get("study", []));
+  $("streak").textContent = calcStreak();
+  const did = days.has(TODAY);
+  $("studied").textContent = did ? "Studied today ✅" : "I studied today ✏️";
+  $("studied").disabled = did;
+  $("studyMsg").textContent = did ? pickDaily(CHEERS, 3) : "";
+  let cells = "";
+  for(let i=13;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); cells += `<div class="day${days.has(keyOf(d))?" yes":""}">${d.getDate()}</div>`; }
+  $("days").innerHTML = cells;
+  const g = store.get("grad", GRAD_DATE);
+  $("gradDate").value = g || "";
+  if(g){
+    const [y,m,dd] = g.split("-").map(Number);
+    const diff = Math.ceil((new Date(y,m-1,dd) - new Date(now.getFullYear(),now.getMonth(),now.getDate())) / 86400000);
+    $("gradDays").textContent = diff > 0 ? diff.toLocaleString() : "🎓";
+    $("gradLabel").textContent = diff > 0 ? "days to go" : "You did it!";
+  } else { $("gradDays").textContent = "–"; $("gradLabel").textContent = "set a date below"; }
+}
+$("studied").onclick = () => { const s = store.get("study", []); if(!s.includes(TODAY)) s.push(TODAY); store.set("study", s); renderNP(); };
+$("gradDate").onchange = e => { e.target.value ? store.set("grad", e.target.value) : store.del("grad"); renderNP(); };
+loaders.np = renderNP;
+
+/* ---------- open when ---------- */
+function renderLetters(){
+  const read = store.get("lettersRead", []);
+  $("envList").innerHTML = LETTERS.map((l,i) =>
+    `<button class="env" data-l="${i}"><div class="em">${read.includes(i) ? "📭" : (l.emoji || "✉️")}</div><div><b>Open when ${esc(l.title)}</b><span>${read.includes(i) ? "Opened before" : "Sealed"}</span></div></button>`
+  ).join("");
+  $("envList").querySelectorAll("[data-l]").forEach(b => b.onclick = () => {
+    const i = +b.dataset.l, l = LETTERS[i];
+    $("envTitle").textContent = `Open when ${l.title}`; $("envBody").textContent = l.body;
+    $("envList").style.display = "none"; $("envOpen").style.display = "block";
+    const r = store.get("lettersRead", []); if(!r.includes(i)){ r.push(i); store.set("lettersRead", r); }
+  });
+}
+$("envClose").onclick = () => { $("envOpen").style.display = "none"; $("envList").style.display = "block"; renderLetters(); };
+loaders.open = () => { $("envOpen").style.display = "none"; $("envList").style.display = "block"; renderLetters(); };
+
+/* ---------- self-care ---------- */
+const CARE_DONE = ["Look at you taking care of yourself ✨","Gold star for you ⭐","Nurse, heal thyself — and you did 💗"];
+function renderCare(){
+  const done = store.get("care:"+TODAY, []);
+  $("careList").innerHTML = CARE_ITEMS.map((c,i) => `<label class="check"><input type="checkbox" data-c="${i}" ${done.includes(i)?"checked":""}> ${esc(c)}</label>`).join("");
+  $("careList").querySelectorAll("[data-c]").forEach(cb => cb.onchange = () => {
+    let d = store.get("care:"+TODAY, []); const i = +cb.dataset.c;
+    d = cb.checked ? [...new Set([...d, i])] : d.filter(x => x !== i);
+    store.set("care:"+TODAY, d); renderCareMsg();
+  });
+  renderCareMsg();
+}
+function renderCareMsg(){
+  const n = store.get("care:"+TODAY, []).length;
+  $("careMsg").textContent = n >= CARE_ITEMS.length ? pickDaily(CARE_DONE, 5) : n ? `${n} of ${CARE_ITEMS.length} — keep going` : "";
+}
+try{ Object.keys(localStorage).forEach(k => { if(/^aimee:care:/.test(k) && !k.endsWith(TODAY)) localStorage.removeItem(k); }); }catch(e){}
+loaders.care = renderCare;
+
+/* ---------- start ---------- */
+refreshHome();
+setInterval(() => { if($("home").classList.contains("on")) refreshHome(); }, 60000);
+const start = location.hash.slice(1);
+if(start && $(start) && start !== "home") go(start);
+</script>
+</body>
+</html>
